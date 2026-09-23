@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+/* Custom ocean styling */
+body {
+  background-color: #030814;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #071226;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e3e70;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0ea5e9;
+}
+
+/* Glassmorphic panels */
+.glass-panel {
+  background: rgba(11, 27, 54, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+}
+
+.glass-panel-glow {
+  background: rgba(11, 27, 54, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+}
+
+.glass-panel-subtle {
+  background: rgba(7, 18, 38, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Scientific radar scan line */
+@keyframes radar-sweep {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(1000%);
+  }
+}
+
+.radar-scan {
+  animation: radar-sweep 6s linear infinite;
+}
