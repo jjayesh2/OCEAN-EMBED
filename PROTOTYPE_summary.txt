@@ -1,0 +1,60 @@
+"""
+xarray Data Ingestion & Storage Layer for OceanEmbed
+Wraps synthetic or real NetCDF/Zarr proxy data into standard xarray Datasets
+with dimensions (time, lat, lon, depth) ready for production swap-in.
+"""
+import numpy as np
+import xarray as xr
+import json
+from pathlib import Path
+from backend.app.config import (
+    DATA_FILE, ARGO_FILE, STANDARD_DEPTHS, SURFACE_CHANNELS
+)
+
+class OceanDataLoader:
+    _instance = None
+
+    def __init__(self):
+        self.dataset = None
+        self.argo_observations = []
+        self.is_ocean = None
+        self.dates = []
+        self.lats = None
+        self.lons = None
+        self.load()
+
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = OceanDataLoader()
+        return cls._instance
+
+    def load(self):
+        if not DATA_FILE.exists() or not ARGO_FILE.exists():
+            from backend.app.data.generator import generate_synthetic_archive
+            generate_synthetic_archive(num_days=45)
+
+        raw = np.load(DATA_FILE, allow_pickle=True)
+        surface_data = raw['surface']       # [days, channels, lats, lons]
+        profile_data = raw['profiles']      # [days, depths, lats, lons]
+        self.lats = raw['lats']
+        self.lons = raw['lons']
+        self.dates = [str(d) for d in raw['dates']]
+        self.is_ocean = raw['is_ocean']
+
+        # Construct production-grade xarray.Dataset with standard dimensions
+        data_vars = {
+            "subsurface_temperature": (
+                ["time", "depth", "lat", "lon"],
+                profile_data,
+                {"units": "degC", "long_name": "Reconstructed Sea Water Potential Temperature at 15 Standard Depths"}
+            )
+        }
+
+        # Add surface variables as individual data variables
+        for idx, ch in enumerate(SURFACE_CHANNELS):
+            data_vars[ch] = (
+                ["time", "lat", "lon"],
+                surface_data[:, idx],
+                {"long_name": f"Surface {ch.upper()}"}
+   
