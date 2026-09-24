@@ -56,6 +56,10 @@ export function Header({ activeView, onSetView, date, region, isRunning, adapter
             <span>GLORYS12V1 · {date}</span>
           </div>
           <div className="hidden lg:flex items-center gap-1.5 bg-ocean-900 border border-ocean-700 rounded px-2 py-1 text-slate-400">
+            <span className="text-slate-500">Domain:</span>
+            <span className="text-cyan-400 font-mono">5°N–30°N, 45°E–105°E</span>
+          </div>
+          <div className="hidden xl:flex items-center gap-1.5 bg-ocean-900 border border-ocean-700 rounded px-2 py-1 text-slate-400">
             <span className="text-slate-500">Cells:</span>
             <span className="text-slate-300">{adapterMeta.totalOceanCells.toLocaleString()}</span>
           </div>
