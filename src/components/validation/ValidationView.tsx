@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { ModelInferencePackage, ArgoValidationMatch, PrimaryView } from '../../types/ocean';
 import { calculateArgoValidationMetrics } from '../../validation/metricsEngine';
+import { IncoisLasBenchmark } from './IncoisLasBenchmark';
 import { AlertCircle, MapPin, Activity, Info } from 'lucide-react';
 
 interface ValidationViewProps {
@@ -138,6 +139,13 @@ export function ValidationView({ inferenceResult, allArgoFloats, onSelectLocatio
           Click any float (amber) to select it as the validation reference point. Cyan = currently selected. Data from INCOIS/Coriolis ARGO network.
         </p>
       </div>
+
+      {/* INCOIS Live Access Server (LAS) Benchmark Suite */}
+      <IncoisLasBenchmark
+        metrics={metrics}
+        selectedStationLat={argoMatch?.lat ?? 15.0}
+        selectedStationLon={argoMatch?.lon ?? 85.0}
+      />
 
       {/* ARGO match info */}
       {hasMatch ? (
